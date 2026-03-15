@@ -12,6 +12,9 @@ license = {text = "MIT"}
 keywords = ["iot", "scada", "edge", "modbus", "industrial"]
 dependencies = []
 
+[project.scripts]
+scadable = "scadable.edge.cli:main"
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["scadable*"]

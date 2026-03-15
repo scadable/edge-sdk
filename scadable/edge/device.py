@@ -1,3 +1,11 @@
+PAYLOAD_SCHEMA = {
+    "device_id": str,
+    "protocol": str,
+    "timestamp": int,
+    "payload": dict,
+}
+
+
 class Device:
     """
     Base class for all gateway devices.
@@ -9,18 +17,23 @@ class Device:
         connection — subclass of ModbusConnection (or other protocol connection)
         frequency  — polling interval in seconds, use constants: FIVE_SEC, TEN_SEC etc
 
+    Optional class variables:
+        filter     — list of register names to pull (empty = pull all)
+
     Usage:
         class MyPLC(Device):
             id = "device-001"
             protocol = MODBUS_TCP
             connection = Connection
             frequency = FIVE_SEC
+            filter = []  # empty = pull all registers
     """
 
     id: str = None
     protocol: str = None
     connection = None
     frequency: int = 10
+    filter: list = []
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)

@@ -1,4 +1,4 @@
-from .device import Device
+from .device import Device, PAYLOAD_SCHEMA
 from .protocols.modbus import ModbusConnection, ModbusProtocol
 from .protocols.base import Protocol
 from .constants import (
@@ -8,6 +8,7 @@ from .constants import (
 
 __all__ = [
     "Device",
+    "PAYLOAD_SCHEMA",
     "ModbusConnection",
     "ModbusProtocol",
     "Protocol",
