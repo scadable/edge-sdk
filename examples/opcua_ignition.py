@@ -3,6 +3,9 @@ Example: OPC-UA — Ignition SCADA Server
 
 Reads tag values from an Ignition gateway via OPC-UA.
 Works with: Ignition, Kepware, Siemens WinCC, Beckhoff TwinCAT, Prosys.
+
+OPC-UA data is already named and typed — no decode() needed
+unless you want to rename fields or convert units.
 """
 from scadable.edge import Device, OPCUAConnection
 from scadable.edge.constants import OPCUA, FIVE_SEC
@@ -21,8 +24,8 @@ class Connection(OPCUAConnection):
         "ns=2;s=Pump/Speed",
         "ns=2;s=Pump/Status",
     ])
-    security_policy: str = "None"  # or "Basic256Sha256" for encrypted
-    username: str = ""             # leave empty for anonymous
+    security_policy: str = "None"
+    username: str = ""
     password: str = ""
 
 
@@ -31,4 +34,17 @@ class IgnitionServer(Device):
     protocol = OPCUA
     connection = Connection
     frequency = FIVE_SEC
-    filter = []  # read all configured node_ids
+    filter = []
+
+    # No decode() needed — OPC-UA nodes are already named:
+    # {"Tank/Temperature": 23.5, "Tank/Pressure": 101.3, ...}
+    #
+    # But you CAN add one to rename or convert:
+    #
+    # def decode(self, raw: dict) -> dict:
+    #     p = raw["payload"]
+    #     return {
+    #         "temp_celsius": p.get("Tank/Temperature", 0),
+    #         "temp_fahrenheit": p.get("Tank/Temperature", 0) * 9/5 + 32,
+    #         "pressure_psi": p.get("Tank/Pressure", 0) * 14.696,
+    #     }

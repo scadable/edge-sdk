@@ -52,6 +52,19 @@ class {class_name}(Device):
     connection = Connection
     frequency = FIVE_SEC
     filter = []  # empty = pull all registers; e.g. ["reg_100", "reg_102"] to filter
+
+    # Optional: transform raw registers into meaningful values.
+    # If not defined, raw data passes through unchanged.
+    #
+    # def decode(self, raw: dict) -> dict:
+    #     regs = raw["payload"]
+    #     return {{
+    #         "temperature": regs.get("reg_0", 0) / 100.0,
+    #         "pressure": regs.get("reg_1", 0) / 10.0,
+    #     }}
+    #
+    # def encode(self, command: dict) -> dict:
+    #     return {{"reg_10": int(command.get("set_speed", 0) * 10)}}
 '''
 
 MODBUS_RTU_TEMPLATE = '''\
@@ -104,6 +117,11 @@ class {class_name}(Device):
     connection = Connection
     frequency = FIVE_SEC
     filter = []  # empty = pull all registers; e.g. ["reg_100", "reg_102"] to filter
+
+    # Optional: transform raw registers into meaningful values.
+    # def decode(self, raw: dict) -> dict:
+    #     regs = raw["payload"]
+    #     return {{"temperature": regs.get("reg_0", 0) / 100.0}}
 '''
 
 OPCUA_TEMPLATE = '''\
@@ -167,6 +185,16 @@ class {class_name}(Device):
     connection = Connection
     frequency = FIVE_SEC
     filter = []  # empty = read all node_ids; e.g. ["Temperature"] to filter
+
+    # OPC-UA nodes are already named — decode is usually not needed.
+    # But you can rename or convert units:
+    #
+    # def decode(self, raw: dict) -> dict:
+    #     p = raw["payload"]
+    #     return {{
+    #         "temp_f": p.get("Temperature", 0) * 9/5 + 32,
+    #         "pressure_psi": p.get("Pressure", 0) * 14.696,
+    #     }}
 '''
 
 SERIAL_TEMPLATE = '''\
@@ -227,6 +255,18 @@ class {class_name}(Device):
     connection = Connection
     frequency = ONE_SEC
     filter = []  # empty = forward all data
+
+    # Optional: transform incoming frames. Return None to drop a frame.
+    #
+    # def decode(self, raw: dict):
+    #     payload = raw["payload"]
+    #     if payload.get("frame_type") != 1:
+    #         return None  # drop non-image frames
+    #     return {{
+    #         "type": "image",
+    #         "content_type": "image/jpeg",
+    #         "data": payload["data"],
+    #     }}
 '''
 
 TEMPLATES = {

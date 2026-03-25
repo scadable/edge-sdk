@@ -14,19 +14,19 @@ class Device:
     Required class variables:
         id         — unique identifier for this device
         protocol   — use a constant from scadable.edge.constants
-        connection — subclass of ModbusConnection (or other protocol connection)
+        connection — subclass of a connection class (ModbusTCPConnection, etc.)
         frequency  — polling interval in seconds, use constants: FIVE_SEC, TEN_SEC etc
 
     Optional class variables:
-        filter     — list of register names to pull (empty = pull all)
+        filter     — list of field names to pull (empty = pull all)
 
-    Usage:
-        class MyPLC(Device):
-            id = "device-001"
-            protocol = MODBUS_TCP
-            connection = Connection
-            frequency = FIVE_SEC
-            filter = []  # empty = pull all registers
+    Optional methods:
+        decode(raw) — transform incoming data before forwarding to outbound.
+                      Return a dict to forward, or None to drop the message.
+        encode(cmd) — transform outgoing commands before sending to device.
+                      Return a dict of raw values to write to the device.
+
+    If decode/encode are not overridden, data passes through unchanged.
     """
 
     id: str = None
@@ -37,7 +37,6 @@ class Device:
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
-        # Skip validation for intermediate base classes
         if cls.__name__ == "Device":
             return
         errors = []
@@ -56,8 +55,41 @@ class Device:
             f"connection={self.connection.__name__} frequency={self.frequency}s>"
         )
 
-    def read(self, *args, **kwargs):
-        raise NotImplementedError("read() will be implemented by the WASM runtime")
+    def decode(self, raw: dict):
+        """
+        Transform incoming device data before forwarding to outbound.
 
-    def write(self, *args, **kwargs):
-        raise NotImplementedError("write() will be implemented by the WASM runtime")
+        Override this to convert raw protocol data into meaningful values.
+        If not overridden, raw data passes through unchanged.
+
+        Args:
+            raw: dict matching PAYLOAD_SCHEMA:
+                 {
+                     "device_id": "my-plc",
+                     "protocol": "modbus-tcp",
+                     "timestamp": 1711234567,
+                     "payload": {"reg_0": 2350, "reg_1": 10130, ...}
+                 }
+
+        Returns:
+            dict — transformed data, forwarded to outbound
+            None — drop this message (don't forward)
+        """
+        return raw
+
+    def encode(self, command: dict) -> dict:
+        """
+        Transform outgoing commands before sending to the device.
+
+        Override this to convert meaningful commands into raw protocol values.
+        If not overridden, commands pass through unchanged.
+
+        Args:
+            command: dict from the API or controller, e.g.:
+                     {"set_speed": 1500, "set_temp": 75.0}
+
+        Returns:
+            dict — raw values to write to the device, e.g.:
+                   {"reg_10": 15000, "reg_11": 7500}
+        """
+        return command
