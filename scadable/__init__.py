@@ -20,6 +20,7 @@ from .connections import modbus_tcp, modbus_rtu, opcua, serial_uart
 from .fields import Register, Field
 from .schedule import every
 from .actions import route, actuate, alert, now
+from . import system
 from .constants import (
     SECONDS, MINUTES, HOURS,
     MB_64, MB_128, MB_256, MB_512, GB_1, GB_2, GB_5,
