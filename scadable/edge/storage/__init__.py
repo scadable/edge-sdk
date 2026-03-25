@@ -1,3 +1,3 @@
-from .base import Storage, Partition
+from .base import Storage, Partition, Table, Query
 from .file import FileStorage, FilePartition
-from .sqlite import SQLiteStorage, SQLitePartition
+from .sqlite import SQLiteStorage

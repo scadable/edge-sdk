@@ -3,14 +3,12 @@ from .base import Storage, Partition
 
 class FilePartition(Partition):
     """
-    File-based partition. Each key is stored as a file in a subdirectory.
-    Metadata is stored as a JSON sidecar file alongside the data.
+    File-based partition. Each key is a file in a subdirectory.
+    Metadata stored as JSON sidecar. Isolated from other partitions.
 
-    Structure on disk (managed by the runtime):
-        {storage_path}/{partition_name}/{key}.dat
-        {storage_path}/{partition_name}/{key}.meta.json
-
-    Note: All operations are executed by the edge-main runtime.
+    On-disk structure (managed by runtime):
+        {storage_path}/{partition}/{key}.dat
+        {storage_path}/{partition}/{key}.meta.json
     """
 
     def write(self, key: str, data, metadata: dict = None) -> str:
@@ -34,20 +32,21 @@ class FilePartition(Partition):
 
 class FileStorage(Storage):
     """
-    File-based storage backend.
+    File-based storage for blobs (images, binary data, raw files).
 
-    Stores data as files on disk. Each partition is a subdirectory.
-    Oldest files are automatically evicted when max_size is reached.
+    Each partition is a subdirectory. Oldest files are evicted when
+    max_size is reached. A warning is logged when usage exceeds
+    warning_threshold % of max_size.
 
     Usage:
-        class LocalStore(FileStorage):
-            id = "local-data"
-            path = "/var/scadable/storage/local-data"
-            max_size = SIZE_512_MB
+        class ImageStore(FileStorage):
+            id = "image-store"
+            path = "/var/scadable/storage/images"
+            max_size = SIZE_1_GB
+            warning_threshold = 80
 
-    Then in a decoder or controller:
-        store = storage("local-data")
-        images = store.partition("images")
+        store = ImageStore()
+        images = store.partition("camera")
         images.write("frame-001", jpeg_bytes, metadata={"type": "jpeg"})
         data = images.read("frame-001")
     """
@@ -55,12 +54,7 @@ class FileStorage(Storage):
     id: str = None
     path: str = None
     max_size: int = 512 * 1024 * 1024
+    warning_threshold: int = 80
 
     def partition(self, name: str) -> FilePartition:
         raise NotImplementedError("partition() is executed by the edge-main runtime")
-
-    def size(self) -> int:
-        raise NotImplementedError("size() is executed by the edge-main runtime")
-
-    def cleanup(self, target_bytes: int = None):
-        raise NotImplementedError("cleanup() is executed by the edge-main runtime")
