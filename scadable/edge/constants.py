@@ -2,6 +2,7 @@
 MODBUS_TCP = "modbus-tcp"
 MODBUS_RTU = "modbus-rtu"
 OPCUA      = "opcua"
+SERIAL     = "serial"
 MQTT       = "mqtt"
 
 # Frequencies in seconds
