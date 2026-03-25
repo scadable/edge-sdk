@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from .base import Protocol, TCPConnection, SerialConnection
 
 
+# Docs: https://docs.scadable.com/docs/edge/protocols#modbus-tcp
 @dataclass
 class ModbusTCPConnection(TCPConnection):
     """
@@ -19,6 +20,7 @@ class ModbusTCPConnection(TCPConnection):
     slave_id: int = 1
 
 
+# Docs: https://docs.scadable.com/docs/edge/protocols#modbus-rtu
 @dataclass
 class ModbusRTUConnection(SerialConnection):
     """

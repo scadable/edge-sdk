@@ -2,6 +2,7 @@ from ..device import Device
 from ..storage.base import Storage
 
 
+# Docs: https://docs.scadable.com/docs/edge/outbound
 class Outbound:
     """
     Base class for all outbound destinations.
@@ -50,6 +51,7 @@ class Outbound:
         return f"<{self.__class__.__name__} id={self.id!r} devices={dev_names}>"
 
 
+# Docs: https://docs.scadable.com/docs/edge/outbound#outbounddata
 class OutboundData(Outbound):
     """
     Scadable-managed data outbound (MQTT telemetry stream).
@@ -68,6 +70,7 @@ class OutboundData(Outbound):
     devices: list = []
 
 
+# Docs: https://docs.scadable.com/docs/edge/outbound#outboundupload
 class OutboundUpload(Outbound):
     """
     Scadable-managed upload outbound (S3 file upload).

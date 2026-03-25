@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from .base import Protocol, SerialConnection
 
 
+# Docs: https://docs.scadable.com/docs/edge/protocols#serial
 @dataclass
 class SerialDeviceConnection(SerialConnection):
     """

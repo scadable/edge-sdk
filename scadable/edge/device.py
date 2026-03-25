@@ -6,6 +6,7 @@ PAYLOAD_SCHEMA = {
 }
 
 
+# Docs: https://docs.scadable.com/docs/edge/device-config
 class Device:
     """
     Base class for all gateway devices.
@@ -55,6 +56,7 @@ class Device:
             f"connection={self.connection.__name__} frequency={self.frequency}s>"
         )
 
+    # Docs: https://docs.scadable.com/docs/edge/decode-encode
     def decode(self, raw: dict):
         """
         Transform incoming device data before forwarding to outbound.
@@ -77,6 +79,7 @@ class Device:
         """
         return raw
 
+    # Docs: https://docs.scadable.com/docs/edge/decode-encode#encode
     def encode(self, command: dict) -> dict:
         """
         Transform outgoing commands before sending to the device.

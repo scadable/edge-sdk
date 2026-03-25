@@ -30,6 +30,7 @@ class FilePartition(Partition):
         raise NotImplementedError("metadata() is executed by the edge-main runtime")
 
 
+# Docs: https://docs.scadable.com/docs/edge/storage#file-storage
 class FileStorage(Storage):
     """
     File-based storage for blobs (images, binary data, raw files).

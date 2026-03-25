@@ -3,6 +3,7 @@ from typing import List, Optional
 from .base import Protocol, TCPConnection
 
 
+# Docs: https://docs.scadable.com/docs/edge/protocols#opc-ua
 @dataclass
 class OPCUAConnection(TCPConnection):
     """

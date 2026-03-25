@@ -1,6 +1,7 @@
 from .base import Storage, Table
 
 
+# Docs: https://docs.scadable.com/docs/edge/storage#sqlite-storage
 class SQLiteStorage(Storage):
     """
     SQLite-based storage for structured data (tables, rows, queries).
