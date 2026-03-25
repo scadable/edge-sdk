@@ -9,6 +9,10 @@ MQTT       = "mqtt"
 STORAGE_FILE   = "file"
 STORAGE_SQLITE = "sqlite"
 
+# Outbound types
+OUTBOUND_DATA   = "data"
+OUTBOUND_UPLOAD = "upload"
+
 # Frequencies in seconds
 ONE_SEC    = 1
 FIVE_SEC   = 5

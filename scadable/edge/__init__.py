@@ -3,12 +3,14 @@ from .protocols.base import Protocol, TCPConnection, SerialConnection
 from .protocols.modbus import ModbusTCPConnection, ModbusRTUConnection, ModbusProtocol
 from .protocols.opcua import OPCUAConnection, OPCUAProtocol
 from .protocols.serial import SerialDeviceConnection, SerialProtocol
-from .storage.base import Storage, Partition
+from .storage.base import Storage, Partition, Table, Query
 from .storage.file import FileStorage
 from .storage.sqlite import SQLiteStorage
+from .outbound.base import Outbound, OutboundData, OutboundUpload
 from .constants import (
     MODBUS_TCP, MODBUS_RTU, OPCUA, SERIAL, MQTT,
     STORAGE_FILE, STORAGE_SQLITE,
+    OUTBOUND_DATA, OUTBOUND_UPLOAD,
     ONE_SEC, FIVE_SEC, TEN_SEC, THIRTY_SEC, ONE_MIN, FIVE_MIN,
     SIZE_64_MB, SIZE_128_MB, SIZE_256_MB, SIZE_512_MB,
     SIZE_1_GB, SIZE_2_GB, SIZE_5_GB,
@@ -27,7 +29,7 @@ __all__ = [
     # Modbus
     "ModbusTCPConnection",
     "ModbusRTUConnection",
-    "ModbusConnection",       # backward compat alias
+    "ModbusConnection",
     "ModbusProtocol",
     # OPC-UA
     "OPCUAConnection",
@@ -38,11 +40,18 @@ __all__ = [
     # Storage
     "Storage",
     "Partition",
+    "Table",
+    "Query",
     "FileStorage",
     "SQLiteStorage",
+    # Outbound
+    "Outbound",
+    "OutboundData",
+    "OutboundUpload",
     # Constants
     "MODBUS_TCP", "MODBUS_RTU", "OPCUA", "SERIAL", "MQTT",
     "STORAGE_FILE", "STORAGE_SQLITE",
+    "OUTBOUND_DATA", "OUTBOUND_UPLOAD",
     "ONE_SEC", "FIVE_SEC", "TEN_SEC", "THIRTY_SEC", "ONE_MIN", "FIVE_MIN",
     "SIZE_64_MB", "SIZE_128_MB", "SIZE_256_MB", "SIZE_512_MB",
     "SIZE_1_GB", "SIZE_2_GB", "SIZE_5_GB",
