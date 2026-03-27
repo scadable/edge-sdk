@@ -1,19 +1,20 @@
-"""OPC-UA connection to Ignition SCADA."""
-from scadable import Device, opcua, every, SECONDS
+"""OPC-UA connection to Ignition SCADA server."""
+from scadable import Device, opcua, every, Node, SECONDS, SECURITY_NONE
+
 
 class IgnitionSCADA(Device):
     id = "ignition-scada"
-    name = "Ignition gateway"
-
+    name = "Ignition SCADA server"
     connection = opcua(
-        host="${IGNITION_HOST}",
+        host="${OPCUA_HOST}",
         port=4840,
+        security=SECURITY_NONE,
         nodes=[
-            ("temperature", "ns=2;s=Tank/Temperature"),
-            ("pressure",    "ns=2;s=Tank/Pressure"),
-            ("level",       "ns=2;s=Tank/Level"),
-            ("pump_status", "ns=2;s=Pump/Status"),
-            ("pump_speed",  "ns=2;s=Pump/Speed"),
-        ]
+            Node("temperature", namespace=2, path="Tank/Temperature"),
+            Node("pressure", namespace=2, path="Tank/Pressure"),
+            Node("level", namespace=2, path="Tank/Level"),
+            Node("pump_status", namespace=2, path="Pump/Status"),
+            Node("pump_speed", namespace=2, identifier=1001),
+        ],
     )
     poll = every(5, SECONDS)
