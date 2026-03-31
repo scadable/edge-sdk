@@ -1,5 +1,5 @@
 """Modbus TCP temperature and pressure sensor."""
-from scadable import Device, modbus_tcp, every, Register, SECONDS
+from scadable import Device, modbus_tcp, every, Register, Historian, SECONDS, MINUTES
 
 class TempPressureSensor(Device):
     id = "line1-temp-pressure"
@@ -13,3 +13,9 @@ class TempPressureSensor(Device):
         Register(40002, "pressure",    unit="bar", scale=0.01),
         Register(40003, "flow_rate",   unit="L/min", scale=0.1),
     ]
+
+    # Store temperature and pressure every 5 minutes (flow_rate not stored)
+    historian = Historian(
+        fields=["temperature", "pressure"],
+        interval=every(5, MINUTES),
+    )

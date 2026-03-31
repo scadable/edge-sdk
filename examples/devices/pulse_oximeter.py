@@ -1,5 +1,5 @@
 """BLE pulse oximeter for patient monitoring."""
-from scadable import Device, ble, every, Characteristic, SECONDS
+from scadable import Device, ble, every, Characteristic, Historian, SECONDS
 
 
 class PulseOximeter(Device):
@@ -15,3 +15,6 @@ class PulseOximeter(Device):
         ],
     )
     poll = every(1, SECONDS)
+
+    # Store SpO2 and pulse rate every reading, skip raw waveform
+    historian = Historian(fields=["spo2", "pulse_rate"])
